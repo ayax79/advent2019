@@ -1,25 +1,34 @@
 // Advent of Code - Day 2
 use std::io::prelude::*;
 use std::io::BufReader;
-use std::fs::File;
 use std::string::String;
 use std::iter::Iterator;
+use std::fs::File;
+use advent2019::jack::io::read_input;
 
 fn main() {    
-    let operations = load_operations(read_input());
-    let mut op_iterator = operations.iter()
-        .cloned()
-        .cycle();
 
-    let total = (0..99)
-        .fold(0.0, |acc, num| {
-            let operation = op_iterator.next().unwrap_or(Operation::NoOp);
-            let result = operation.op(acc, num as f64);
-            println!("{} {:?} {} = {}", acc, operation, num, result);
-            result
-        });
-
-    println!("total: {}", total);
+    match read_input("./etc/two.txt") {
+        Ok(reader) => {
+            let operations = load_operations(reader);
+            let mut op_iterator = operations.iter()
+                .cloned()
+                .cycle();
+        
+            let total = (0..99)
+                .fold(0.0, |acc, num| {
+                    let operation = op_iterator.next().unwrap_or(Operation::NoOp);
+                    let result = operation.op(acc, num as f64);
+                    println!("{} {:?} {} = {}", acc, operation, num, result);
+                    result
+                });
+            println!("total: {}", total);        
+        }
+        Err(e) => {
+            eprintln!("An error occurred: {}", e);
+            std::process::exit(1);
+        }
+    }
 }
 
 fn load_operations(reader: BufReader<File>) -> Vec<Operation> {
@@ -37,12 +46,6 @@ fn load_operations(reader: BufReader<File>) -> Vec<Operation> {
                 .unwrap_or(Operation::NoOp)
         })
         .collect()
-}
-
-fn read_input() -> BufReader<File> {
-    let file_in = File::open("./etc/two.txt").unwrap();
-    let file_reader = BufReader::new(file_in);
-    return file_reader
 }
 
 #[derive(Debug, Clone)]

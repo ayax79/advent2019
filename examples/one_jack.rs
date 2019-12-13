@@ -1,13 +1,13 @@
 // Advent of Code - Day 1
-use std::io::prelude::*;
-use std::io::{self, BufReader};
 use std::fs::File;
+use std::io::{BufReader, BufRead};
+use advent2019::jack::io::read_input;
 
 type Mass = f32;
 type Fuel = f32;
 
 fn main() {    
-    let result = read_input()
+    let result = read_input("./etc/one.txt")
         .map(calc_totals);
 
     // perform pattern matching on the result
@@ -23,13 +23,6 @@ fn main() {
             std::process::exit(1);
         }
     }
-}
-
-fn read_input() -> io::Result<BufReader<File>> {
-    // the "?" macro is short and for return Err 
-    let file_in = File::open("./etc/one.txt")?;
-    // last argument is return value, since we are returning it in a Result wrap it in Ok
-    Ok(BufReader::new(file_in)) 
 }
 
 fn calc_totals(input: BufReader<File>) -> (Mass, Fuel) {
